@@ -13,13 +13,11 @@ import org.springframework.stereotype.Component;
  * @Change:
  */
 @Component
+@ConfigurationProperties(prefix = "tomcat")
 public class ServerConfig {
-    @Value("${tomcat.ip}")
     private String ip;
-    @Value("${tomcat.port}")
     private int port;
-    @Value("${tomcat.projectName}")
-    private String proectName;
+    private String projectName;
 
     public String getIp() {
         return ip;
@@ -37,15 +35,15 @@ public class ServerConfig {
         this.port = port;
     }
 
-    public String getProectName() {
-        return proectName;
+    public String getProjectName() {
+        return projectName;
     }
 
-    public void setProectName(String proectName) {
-        this.proectName = proectName;
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 
     public String getUrl() {
-        return "http://" + getIp()+":"+getPort()+getProectName();
+        return "http://" + getIp()+":"+getPort()+"/"+getProjectName();
     }
 }
