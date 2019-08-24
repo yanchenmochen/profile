@@ -19,6 +19,19 @@
 
 
 	<dependencies>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <!--移除嵌入式tomcat插件-->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
@@ -41,31 +54,9 @@
 			<version>3.5.0</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.codehaus.cargo/cargo-maven2-plugin -->
-		<dependency>
-			<groupId>org.codehaus.cargo</groupId>
-			<artifactId>cargo-maven2-plugin</artifactId>
-			<version>1.7.6</version>
-		</dependency>
 
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-			<!--移除嵌入式tomcat插件-->
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-tomcat</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>3.1.0</version>
-			<scope>provided</scope>
-		</dependency>
+
 
 	</dependencies>
 
@@ -81,21 +72,9 @@
 				<enabled>true</enabled>
 			</releases>
 		</repository>
+
 	</repositories>
 
-
-	<distributionManagement>
-		<repository>
-			<id>nexus-release</id>
-			<name>Local Nexus Repository</name>
-			<url>http://localhost:8081/repository/maven-releases/</url>
-		</repository>
-		<snapshotRepository>
-			<id>nexus-snapshot</id>
-			<name>Local Nexus Repository</name>
-			<url>http://localhost:8081/repository/maven-snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
 
 	<properties>
 		<java.version>1.8</java.version>
@@ -130,45 +109,58 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 				</configuration>
 			</plugin>
-		</plugins>
+
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+
+                <configuration>
+                    <!--
+                    <path>/aa</path>
+                    <uriEncoding>UTF-8</uriEncoding> 非必选项，可省略 -->
+
+                    <url>http://172.20.10.3:8080/manager/text</url>
+                    <username>admin</username>
+                    <password>admin</password>
+                    <path>/</path>
+                </configuration>
+
+            </plugin>
+
+        </plugins>
 
 	</build>
 	<profiles>
 		<profile>
 			<!-- 开发环境 -->
 			<id>jar</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
 			<properties>
 				<pom.package>jar</pom.package>
 			</properties>
 			<dependencies>
-				<dependency>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-tomcat</artifactId>
-					<version>2.0.1.RELEASE</version>
-				</dependency>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </dependency>
 			</dependencies>
 		</profile>
 		<profile>
 			<id>war</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
 			<properties>
 				<pom.package>war</pom.package>
 			</properties>
 			<dependencies>
-				<dependency>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-tomcat</artifactId>
-					<version>2.0.1.RELEASE</version>
-					<scope>provided</scope>
-				</dependency>
-				<dependency>
-					<groupId>javax.servlet</groupId>
-					<artifactId>javax.servlet-api</artifactId>
-					<version>3.1.0</version>
-					<scope>provided</scope>
-				</dependency>
+
+                <dependency>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>javax.servlet-api</artifactId>
+                    <version>3.1.0</version>
+                    <scope>provided</scope>
+                </dependency>
 			</dependencies>
 		</profile>
 	</profiles>
